@@ -12,7 +12,7 @@ import urllib.request
 
 PARQUET = "https://huggingface.co/datasets/openfoodfacts/product-database/resolve/main/food.parquet"
 TAXONOMIES = "https://static.openfoodfacts.org/data/taxonomies/{}.json"
-UA = {"User-Agent": "CestaClara/1.0 (datos semanales; contacto@cestaclara.es)"}
+UA = {"User-Agent": "CestaClara/1.0 (datos semanales; cestaclaraa@gmail.com)"}
 
 
 def total_size(url: str) -> int:
