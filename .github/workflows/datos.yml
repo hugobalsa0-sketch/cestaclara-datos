@@ -15,9 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
@@ -35,7 +35,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gzip -9 -k cestaclara.db
-          fecha=$(date +%Y-%m-%d)
+          fecha=$(date -u +%Y-%m-%d-%H%M) # con hora: se puede lanzar varias veces el mismo día
           gh release create "datos-$fecha" cestaclara.db.gz --latest \
             --title "Datos $fecha" \
             --notes "Productos de España de Open Food Facts (ODbL). Generado con generar.py."
