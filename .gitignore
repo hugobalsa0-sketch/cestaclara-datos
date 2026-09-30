@@ -1,0 +1,5 @@
+entrada/
+*.db
+*.db.gz
+*.tmp
+__pycache__/

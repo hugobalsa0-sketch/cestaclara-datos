@@ -1,0 +1,50 @@
+# Genera cada semana el catálogo de CestaClara y lo publica como "release".
+# En un repositorio público, GitHub Actions es gratis.
+name: Datos semanales
+
+on:
+  schedule:
+    - cron: "0 3 * * 1" # lunes a las 03:00 UTC
+  workflow_dispatch: # y a mano, desde la pestaña Actions
+
+permissions:
+  contents: write
+
+jobs:
+  generar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install -r requirements.txt
+
+      - name: Descargar Open Food Facts
+        run: python descargar.py entrada
+
+      # Hoy salen ~134.000 productos: por debajo de 100.000 algo ha ido mal.
+      - name: Generar catálogo
+        run: python generar.py --origen entrada --destino cestaclara.db --minimo 100000 --memoria 10GB
+
+      - name: Publicar
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gzip -9 -k cestaclara.db
+          fecha=$(date +%Y-%m-%d)
+          gh release create "datos-$fecha" cestaclara.db.gz --latest \
+            --title "Datos $fecha" \
+            --notes "Productos de España de Open Food Facts (ODbL). Generado con generar.py."
+          # Solo guardamos las 4 últimas semanas.
+          gh release list --limit 100 --json tagName -q '.[4:][].tagName' \
+            | xargs -r -n1 gh release delete --yes --cleanup-tag
+
+      - name: Actualizar la web
+        env:
+          VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        if: env.VERCEL_DEPLOY_HOOK != ''
+        run: curl -fsS -X POST "$VERCEL_DEPLOY_HOOK"
