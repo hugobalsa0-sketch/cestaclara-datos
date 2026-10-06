@@ -1,6 +1,6 @@
 # cestaclara-datos
 
-Catálogo de productos alimentarios a la venta en España que usa [CestaClara](https://cesta-clara-navy.vercel.app), derivado de [Open Food Facts](https://world.openfoodfacts.org).
+Catálogo de productos alimentarios a la venta en España que usa [CestaClara](https://cestaclara.es), derivado de [Open Food Facts](https://world.openfoodfacts.org).
 
 Cada lunes, GitHub Actions ([`.github/workflows/datos.yml`](.github/workflows/datos.yml)):
 
