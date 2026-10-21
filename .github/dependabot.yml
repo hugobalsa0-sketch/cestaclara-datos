@@ -1,0 +1,12 @@
+# Dependabot: avisa de versiones nuevas de las acciones de GitHub y de las
+# librerías de Python que usa la actualización semanal del catálogo.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: monthly
